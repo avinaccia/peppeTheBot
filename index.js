@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-let channel = client.channels.cache.get('665184285858463754')
+let channel;
 
 let usersChrono = [];
 
@@ -73,21 +73,19 @@ client.on('presenceUpdate', (status) => {
                     message = "ha cambiato il suo stato! 🐱‍👤"
                     break;
             }
-            channel.send(`${status.member} ${message}`);
+            channel.send(`${status.member.user.username} ${message}`);
             //only for debug
-            console.log(`${status.member} ha cambiato il suo stato in ${status.member.presence.status}`)
+            console.log(`${status.member.user.username} ha cambiato il suo stato in ${status.member.presence.status}`)
             //
             usersChrono[usersChrono.map((e) => { return e.id }).indexOf(status.member.id)].lastStatus = status.member.presence.status;
         }
     }
+
 })
 
 client.on('message', (msg) => {
     if (msg.content.toLowerCase() == "!help") {
         channel.send(`Ciao ${msg.author.username}! Sono Peppe e rendo questo server più interessante! Per ora i miei comandi sono : !watch, !poke @<nome>, !8Ball <domanda>. Provali per scoprire cosa fanno!`);
-    }
-    else if (msg.content.toLowerCase().search("sile") != -1) {
-        channel.send('Non capisco perchè tutti mi odiate :/');
     }
     else if (msg.content.toLowerCase() == 'ping') {
         channel.send("pong!");
@@ -102,11 +100,18 @@ client.on('message', (msg) => {
         for (let i = 0; i < 5; i++) {
             msg.mentions.users.first().send(`Sveglia! ${msg.author.username} vuole giocare con te!`);
         }
-        channel.send(`${user.username} è stato avvisato!`)
+        channel.send(`${msg.mentions.users.first().username} è stato avvisato!`)
     }
     else if (msg.content.substring(0, 6).toLowerCase() == "!8ball".toLowerCase() && msg.content.length > 5) {
         let reply = Math.floor(Math.random() * answers.length)
         channel.send(answers[reply]);
+    } else if (msg.content.toLowerCase() == "!silenzia") {
+        let role = msg.guild.roles.cache.find(role => role.name === "MUTABOT");
+        msg.member.roles.add(role);
+        msg.member.send("Mi hai mutato! Non riceverai più notifiche dal canale e non potrai ne leggere ne inviare messaggi su quel canale. Per smutarmi contatta un admin!")
+    }
+    else if (msg.content.toLowerCase().search("sile") != -1) {
+        channel.send('Non capisco perchè tutti mi odiate :/, se proprio non mi sopporti usa !silenzia');
     }
     else if (msg.content.charAt(0) == "!") {
         channel.send("Mhhh, non ho alcun comando con quel nome...")

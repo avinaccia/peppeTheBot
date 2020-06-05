@@ -7,3 +7,7 @@
 -Fixed bug with the status update message function.
 -Removed case-sensitive commands
 -Added the channel id as a enviromental variable
+
+###05-06-2020
+-Bug fix
+-Added !silezia
