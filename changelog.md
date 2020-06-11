@@ -11,3 +11,9 @@
 ###05-06-2020
 -Bug fix
 -Added !silezia
+
+##06-06-2020
+-Fixed a bug where a member changing status from offline to online won't be logged.
+
+##11-06-2020
+-Added the !chetempofa command.
