@@ -27,6 +27,8 @@ const answers = [
     'La risposta alla domanda potrebbe non essere no',
     'Ieri ti avrei detto di si senza pensarci, ma ora non ne sono così sicuro',
     'Enzogucci ha le risposte',
+    "assolutamente no",
+    "ma ti pare?", 
 ]
 
 function statusHasChanged(member) {
@@ -91,8 +93,6 @@ client.on('presenceUpdate', (status, test) => {
 })
 
 client.on('message', (msg) => {
-    console.log(msg.content.substring(0, 11).toLowerCase());
-
     if (msg.content.toLowerCase() == "!help") {
         channel.send(`Ciao ${msg.author.username}! Sono Peppe e rendo questo server più interessante! Per ora i miei comandi sono : !watch, !poke @<nome>, !8Ball <domanda>, !chetempofa <città>. Provali per scoprire cosa fanno!`);
     }
