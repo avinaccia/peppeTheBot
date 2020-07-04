@@ -28,7 +28,7 @@ const answers = [
     'Ieri ti avrei detto di si senza pensarci, ma ora non ne sono così sicuro',
     'Enzogucci ha le risposte',
     "assolutamente no",
-    "ma ti pare?", 
+    "ma ti pare?",
 ]
 
 function statusHasChanged(member) {
@@ -43,7 +43,7 @@ function statusHasChanged(member) {
     return bool;
 }
 
-function convertToDate(unix){
+function convertToDate(unix) {
     let date = new Date(unix * 1000);
     return `${date.getHours()}:${date.getMinutes()}`;
 }
@@ -93,55 +93,59 @@ client.on('presenceUpdate', (status, test) => {
 })
 
 client.on('message', (msg) => {
-    if (msg.content.toLowerCase() == "!help") {
-        channel.send(`Ciao ${msg.author.username}! Sono Peppe e rendo questo server più interessante! Per ora i miei comandi sono : !watch, !poke @<nome>, !8Ball <domanda>, !chetempofa <città>. Provali per scoprire cosa fanno!`);
-    }
-    else if (msg.content.toLowerCase() == 'ping') {
-        channel.send("pong!");
-    }
-    else if (msg.content.toLowerCase() == "!watch") {
-        channel.send(`Ecco la stanza ${process.env.WATCH2GETHER_URL} !`);
-    }
-    else if (msg.content.toLowerCase() == "omg") {
-        channel.send("omg omg");
-    }
-    else if (msg.content.substring(0, 5).toLowerCase() == "!poke" && msg.content.length > 5) {
-        for (let i = 0; i < 5; i++) {
-            msg.mentions.users.first().send(`Sveglia! ${msg.author.username} vuole giocare con te!`);
+    if (msg.author.username != "Peppe the bot") {
+
+
+        if (msg.content.toLowerCase() == "!help") {
+            channel.send(`Ciao ${msg.author.username}! Sono Peppe e rendo questo server più interessante! Per ora i miei comandi sono : !watch, !poke @<nome>, !8Ball <domanda>, !chetempofa <città>. Provali per scoprire cosa fanno!`);
         }
-        channel.send(`${msg.mentions.users.first().username} è stato avvisato!`)
-    }
-    else if (msg.content.substring(0, 6).toLowerCase() == "!8ball".toLowerCase() && msg.content.length > 5) {
-        let reply = Math.floor(Math.random() * answers.length)
-        channel.send(answers[reply]);
-    } else if (msg.content.toLowerCase() == "!silenzia") {
-        let role = msg.guild.roles.cache.find(role => role.name === "MUTABOT");
-        msg.member.roles.add(role);
-        msg.member.send("Mi hai mutato! Non riceverai più notifiche dal canale e non potrai ne leggere ne inviare messaggi su quel canale. Per smutarmi contatta un admin!")
-    }
-    else if (msg.content.substring(0, 11).toLowerCase() == "!chetempofa") {
-        const city = msg.content.substring(12);
-        if (city == "") {
-            channel.send("Inserisci una città dopo il comando!")
-        } else {
-            fetch(wheatherURL + city, {
-                method: "GET",
-            }).then(response => response.json())
-                .then(data => {
-                    let sunrise = convertToDate(data.sys.sunrise);
-                    let sunset = convertToDate(data.sys.sunset);
-                    channel.send(`A ${city} oggi ${data.weather[0].description}, ci sarà una massima di ${data.main.temp_max}° e una minima di ${data.main.temp_min}°. Il sole sorge alle ${sunrise} e tramonta alle ${sunset}`);
-                })
-                .catch(error => {
-                    channel.send(`Siamo sicuri di abitare sullo stesso pianeta? Sul mio ${city} non esiste 🌍`);
-                })
+        else if (msg.content.toLowerCase() == 'ping') {
+            channel.send("pong!");
         }
-    }
-    else if (msg.content.toLowerCase().search("sile") != -1) {
-        channel.send('Non capisco perchè tutti mi odiate :/, se proprio non mi sopporti usa !silenzia');
-    }
-    else if (msg.content.charAt(0) == "!") {
-        channel.send("Mhhh, non ho alcun comando con quel nome...")
+        else if (msg.content.toLowerCase() == "!watch") {
+            channel.send(`Ecco la stanza ${process.env.WATCH2GETHER_URL} !`);
+        }
+        else if (msg.content.toLowerCase() == "omg") {
+            channel.send("omg omg");
+        }
+        else if (msg.content.substring(0, 5).toLowerCase() == "!poke" && msg.content.length > 5) {
+            for (let i = 0; i < 5; i++) {
+                msg.mentions.users.first().send(`Sveglia! ${msg.author.username} vuole giocare con te!`);
+            }
+            channel.send(`${msg.mentions.users.first().username} è stato avvisato!`)
+        }
+        else if (msg.content.substring(0, 6).toLowerCase() == "!8ball".toLowerCase() && msg.content.length > 5) {
+            let reply = Math.floor(Math.random() * answers.length)
+            channel.send(answers[reply]);
+        } else if (msg.content.toLowerCase() == "!silenzia") {
+            let role = msg.guild.roles.cache.find(role => role.name === "MUTABOT");
+            msg.member.roles.add(role);
+            msg.member.send("Mi hai mutato! Non riceverai più notifiche dal canale e non potrai ne leggere ne inviare messaggi su quel canale. Per smutarmi contatta un admin!")
+        }
+        else if (msg.content.substring(0, 11).toLowerCase() == "!chetempofa") {
+            const city = msg.content.substring(12);
+            if (city == "") {
+                channel.send("Inserisci una città dopo il comando!")
+            } else {
+                fetch(wheatherURL + city, {
+                    method: "GET",
+                }).then(response => response.json())
+                    .then(data => {
+                        let sunrise = convertToDate(data.sys.sunrise);
+                        let sunset = convertToDate(data.sys.sunset);
+                        channel.send(`A ${city} oggi ${data.weather[0].description}, ci sarà una massima di ${data.main.temp_max}° e una minima di ${data.main.temp_min}°. Il sole sorge alle ${sunrise} e tramonta alle ${sunset}`);
+                    })
+                    .catch(error => {
+                        channel.send(`Siamo sicuri di abitare sullo stesso pianeta? Sul mio ${city} non esiste 🌍`);
+                    })
+            }
+        }
+        else if (msg.content.toLowerCase().search("sile") != -1) {
+            channel.send('Non capisco perchè tutti mi odiate :/, se proprio non mi sopporti usa !silenzia');
+        }
+        else if (msg.content.charAt(0) == "!") {
+            channel.send("Mhhh, non ho alcun comando con quel nome...")
+        }
     }
 })
 
